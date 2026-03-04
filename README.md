@@ -135,7 +135,12 @@ You still: **write contract → build → test → deploy (same script pattern) 
 ## Setup
 
 ```bash
+# From repo root: install Hardhat and contract deps
 npm install
+
+# Frontend has its own deps (avoids "Provider not found" from workspace hoisting)
+cd frontend && npm install && cd ..
+
 cp .env.example .env   # optional; for Sepolia deploy
 ```
 
@@ -171,3 +176,32 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 
 - **localhost (8545)** — Local Hardhat node; default for development.
 - **Sepolia** — Testnet; use a [faucet](https://sepoliafaucet.com/) for test ETH. Set `SEPOLIA_RPC_URL` and `PRIVATE_KEY` in root `.env`. Add the chain in `frontend/app/providers.tsx` to use it in the app.
+
+---
+
+## Troubleshooting: “Connect wallet” / MetaMask does nothing
+
+1. **MetaMask installed?**  
+   You need the [MetaMask browser extension](https://metamask.io/download/) (Chrome, Firefox, Brave, etc.). The app talks to the extension; without it, the button can do nothing.
+
+2. **Unlock MetaMask**  
+   Open the extension (click the fox icon) and log in with your password. If it’s on the lock screen, connection requests may not show.
+
+3. **Allow popups for localhost**  
+   MetaMask opens a **popup** to ask “Connect?” / “Switch network?”. Browsers often block popups by default.  
+   - Check the address bar for a blocked-popup icon (e.g. 🚫 or “Pop-up blocked”).  
+   - Click it and choose “Always allow pop-ups from localhost:3000” (or your frontend URL).  
+   - Refresh the page and try “Connect” → MetaMask again.
+
+4. **Add the Hardhat network in MetaMask**  
+   So the app and MetaMask agree on the chain:  
+   - Open MetaMask → click the network dropdown (e.g. “Ethereum Mainnet”) → “Add network” / “Add a network manually”.  
+   - Use:  
+     - **Network name:** `Localhost 8545`  
+     - **RPC URL:** `http://127.0.0.1:8545`  
+     - **Chain ID:** `31337`  
+     - **Currency symbol:** `ETH`  
+   - Save. Switch to “Localhost 8545”, then try connecting again from the frontend.
+
+5. **Check the browser console**  
+   Open DevTools (F12 or right‑click → Inspect) → **Console** tab. Click “Connect” → MetaMask and see if any red errors appear. That often explains silent failures (e.g. missing provider, wrong chain).

@@ -4,7 +4,7 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Crypto Dapp",
-  description: "Minimal dapp scaffold — connect wallet, read/write Counter contract",
+  description: "Minimal dapp scaffold - connect wallet, read/write Counter contract",
 };
 
 export default function RootLayout({
